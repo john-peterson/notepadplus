@@ -105,6 +105,62 @@ void GetLastErrorEx(const wchar_t *f, ...)
 	writeDbg(L"%s%s", lpMsgBuf, buf);
 }
 
+// Registry
+
+LONG RegQueryValueEx2(HKEY hKey, wstring lpSubKey, wstring lpValueName, wstring& value)
+{
+	LONG hRes;
+	TCHAR lpData[512];
+	int lpcbData = 512 * sizeof(TCHAR);
+	int valType;
+	HKEY phkResult;
+	value.clear();
+	if ((hRes = RegOpenKeyEx(hKey, lpSubKey.c_str(), NULL, KEY_ALL_ACCESS, &phkResult)) != 0) goto ret;
+	if ((hRes = RegQueryValueEx(phkResult, lpValueName.c_str(), NULL, (LPDWORD)&valType, (LPBYTE)lpData, (LPDWORD)&lpcbData)) != 0) goto ret;
+	value = wstring(lpData);
+	ret:
+	RegCloseKey(phkResult);
+	return hRes;
+}
+
+LONG RegCreateKeyEx2(HKEY hKey, wstring lpSubKey)
+{
+	LONG hRes;
+	DWORD dwDisp;
+	wstring msg = format(L"RegCreateKeyEx2: %x '%s'", ULONG_PTR(hKey) & ~(1 << 31), lpSubKey.c_str());
+	hRes = RegCreateKeyEx(hKey, lpSubKey.c_str(), 0, NULL, 0, KEY_ALL_ACCESS, NULL, &hKey, &dwDisp);
+	if (hRes) GetLastErrorEx(msg.c_str());
+	return hRes;
+}
+
+LONG RegSetValueEx2(HKEY hKey, wstring lpSubKey, wstring lpValueName, wstring value)
+{
+	LONG hRes;
+	HKEY phkResult;
+	if ((hRes = RegOpenKeyEx(hKey, lpSubKey.c_str(), NULL, KEY_ALL_ACCESS, &phkResult)) != 0) goto ret;
+	if ((hRes = RegSetValueEx(phkResult, lpValueName.c_str(), NULL, REG_SZ, (BYTE*)value.c_str(), value.size()*2+1)) != 0) goto ret;
+	ret:
+	RegCloseKey(phkResult);
+	if (hRes) GetLastErrorEx(L"RegSetValueEx2: %x '%s' '%s' '%s'", ULONG_PTR(hKey) & ~(1 << 31), lpSubKey.c_str(), lpValueName.c_str(), value.c_str());
+	return hRes;
+}
+
+LONG RegDeleteKey2(HKEY hKey, wstring lpSubKey)
+{
+	return RegDeleteKey(hKey, lpSubKey.c_str());
+}
+
+LONG RegDeleteValue2(HKEY hKey, wstring lpSubKey, wstring lpValueName)
+{
+	LONG hRes;
+	HKEY phkResult;
+	if ((hRes = RegOpenKeyEx(hKey, lpSubKey.c_str(), NULL, KEY_ALL_ACCESS, &phkResult)) != 0) goto ret;
+	if ((hRes = RegDeleteValue(phkResult, lpValueName.c_str())) != 0) goto ret;
+	ret:
+	RegCloseKey(phkResult);
+	return hRes;
+}
+
 // Set a call back with the handle after init to set the path.
 // http://msdn.microsoft.com/library/default.asp?url=/library/en-us/shellcc/platform/shell/reference/callbackfunctions/browsecallbackproc.asp
 static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM, LPARAM pData)

@@ -102,6 +102,12 @@ int filter(unsigned int code, struct _EXCEPTION_POINTERS *ep);
 generic_string purgeMenuItemString(const TCHAR * menuItemStr, bool keepAmpersand = false);
 std::vector<generic_string> tokenizeString(const generic_string & tokenString, const char delim);
 
+LONG RegQueryValueEx2(HKEY hKey, wstring lpSubKey, wstring lpValueName, wstring& value);
+LONG RegCreateKeyEx2(HKEY hKey, wstring lpSubKey);
+LONG RegSetValueEx2(HKEY hKey, wstring lpSubKey, wstring lpValueName, wstring value);
+LONG RegDeleteKey2(HKEY hKey, wstring lpSubKey);
+LONG RegDeleteValue2(HKEY hKey, wstring lpSubKey, wstring lpValueName);
+
 void ClientRectToScreenRect(HWND hWnd, RECT* rect);
 void ScreenRectToClientRect(HWND hWnd, RECT* rect);
 
