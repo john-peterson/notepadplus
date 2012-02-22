@@ -32,6 +32,7 @@
 #ifndef REGEXTDLGRC_H
 #include "regExtDlgRc.h"
 #endif //REGEXTDLGRC_H
+using namespace std;
 
 const int extNameLen = 32;
 
@@ -48,10 +49,12 @@ private :
 
 	BOOL CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam);
 	
+	wstring GetOpenCommand();
+	wstring GetIconPath();
 	void getRegisteredExts();
 	void getDefSupportedExts();
-	void addExt(TCHAR *ext);
-	bool deleteExts(const TCHAR *ext2Delete);
+	void addExt(TCHAR *ext, bool edit);
+	bool deleteExts(const TCHAR *ext2Delete, bool edit);
 	void writeNppPath();
 
 	int getNbSubKey(HKEY hKey) const {
