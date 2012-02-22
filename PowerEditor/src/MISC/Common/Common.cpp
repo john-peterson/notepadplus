@@ -43,13 +43,31 @@ void printStr(const TCHAR *str2print)
 	::MessageBox(NULL, str2print, TEXT(""), MB_OK);
 };
 
-void writeLog(const TCHAR *logFileName, const char *log2write)
-{	
-	FILE *f = generic_fopen(logFileName, TEXT("a+"));
-	fwrite(log2write, sizeof(log2write[0]), strlen(log2write), f);
-	fputc('\n', f);
-	fflush(f);
-	fclose(f);
+void writeDbg(const wchar_t *f, ...)
+{
+	const int len = 0x2000;
+	wchar_t buf[len];
+	va_list l;
+	va_start(l, f);
+	_vsnwprintf(buf, len, f, l);
+	va_end(l);
+	OutputDebugString(buf);
+}
+
+void writeLog(const TCHAR *logFileName, const wchar_t *f, ...)
+{
+	const int len = 0x2000;
+	wchar_t buf[len];
+	va_list l;
+	va_start(l, f);
+	_vsnwprintf(buf, len, f, l);
+	va_end(l);
+	FILE *h = generic_fopen(logFileName, TEXT("a+"));
+	fwrite(buf, sizeof(buf[0]), wcslen(buf), h);
+	fputc('\n', h);
+	fflush(h);
+	fclose(h);
+	OutputDebugString(buf);
 }
 
 // Set a call back with the handle after init to set the path.
