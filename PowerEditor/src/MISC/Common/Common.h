@@ -95,7 +95,8 @@ generic_string getFolderName(HWND parent, const TCHAR *defaultDir = NULL);
 void printInt(int int2print);
 void printStr(const TCHAR *str2print);
 
-void writeLog(const TCHAR *logFileName, const char *log2write);
+void writeDbg(const wchar_t *f, ...);
+void writeLog(const TCHAR *logFileName, const wchar_t *f, ...);
 int filter(unsigned int code, struct _EXCEPTION_POINTERS *ep);
 generic_string purgeMenuItemString(const TCHAR * menuItemStr, bool keepAmpersand = false);
 std::vector<generic_string> tokenizeString(const generic_string & tokenString, const char delim);
