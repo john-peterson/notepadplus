@@ -316,24 +316,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
 		pNppParameters->destroyInstance();
 		MainFileManager->destroyInstance();
 
-		int sw = 0;
+		if (::IsIconic(hNotepad_plus))
+			::ShowWindow(hNotepad_plus, SW_RESTORE);
 
-		if (::IsZoomed(hNotepad_plus))
-			sw = SW_MAXIMIZE;
-		else if (::IsIconic(hNotepad_plus))
-			sw = SW_RESTORE;
-
-/* REMOVED
-		else
-			sw = SW_SHOW;
-
-		// IMPORTANT !!!
-		::ShowWindow(hNotepad_plus, sw);
-DEVOMER*/
-/* ADDED */
-		if (sw != 0)
-			::ShowWindow(hNotepad_plus, sw);
-/* DEDDA */
 		::SetForegroundWindow(hNotepad_plus);
 
 		if (params.size() > 0)	//if there are files to open, use the WM_COPYDATA system
