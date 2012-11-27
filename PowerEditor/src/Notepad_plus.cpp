@@ -1116,6 +1116,7 @@ void Notepad_plus::wsTabConvert(spaceTab whichWay)
 				}
 			}
 			*dest = '\0';
+			_pEditView->getCurrentBuffer()->setTabSize(tabWidth);
 			break;
 		}
 		case space2TabLeading:
@@ -1208,6 +1209,7 @@ void Notepad_plus::wsTabConvert(spaceTab whichWay)
                 }
 			}
 		    *dest = '\0';
+			_pEditView->getCurrentBuffer()->setTabSize(0);
             break;
 		}
 	}
@@ -1215,6 +1217,9 @@ void Notepad_plus::wsTabConvert(spaceTab whichWay)
 	_pEditView->execute(SCI_BEGINUNDOACTION);    
 	_pEditView->execute(SCI_SETTEXT, 0, (LPARAM)destination);
 	_pEditView->execute(SCI_ENDUNDOACTION);
+
+	// update indentation
+	_pEditView->setTabSettings();
 
 	// clean up
 	delete [] source;
