@@ -28,6 +28,7 @@
 
 #include "precompiledHeaders.h"
 #include "../Utf8.h"
+using namespace std;
 
 WcharMbcsConvertor * WcharMbcsConvertor::_pSelf = new WcharMbcsConvertor;
 
@@ -78,6 +79,17 @@ void writeLog(const TCHAR *logFileName, const char *log2write)
 	fputc('\n', f);
 	fflush(f);
 	fclose(f);
+}
+
+wstring format(const wchar_t* f, ...) {
+	const int len = 0x2000;
+	wchar_t buf[len];
+	va_list l;
+	va_start(l, f);
+	_vsnwprintf(buf, len, f, l);
+	va_end(l);
+	return wstring(buf);
+}
 
 void writeDbg(const wchar_t *f, ...)
 {

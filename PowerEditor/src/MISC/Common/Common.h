@@ -29,6 +29,8 @@
 #ifndef M30_IDE_COMMUN_H
 #define M30_IDE_COMMUN_H
 
+using namespace std;
+
 const bool dirUp = true;
 const bool dirDown = false;
 
@@ -94,6 +96,7 @@ generic_string getFolderName(HWND parent, const TCHAR *defaultDir = NULL);
 
 void printInt(int int2print);
 void printStr(const TCHAR *str2print);
+wstring format(const wchar_t* f, ...);
 
 void writeDbg(const wchar_t *f, ...);
 void writeLog(const TCHAR *logFileName, const wchar_t *f, ...);
