@@ -72,6 +72,7 @@ void writeLog(const TCHAR *logFileName, const wchar_t *f, ...)
 	va_list l;
 	va_start(l, f);
 	_vsnwprintf(buf, len, f, l);
+	vswprintf(buf, len, f, l);
 	va_end(l);
 	FILE *h = generic_fopen(logFileName, TEXT("a+"));
 	fwrite(buf, sizeof(buf[0]), wcslen(buf), h);
@@ -79,6 +80,29 @@ void writeLog(const TCHAR *logFileName, const wchar_t *f, ...)
 	fflush(h);
 	fclose(h);
 	OutputDebugString(buf);
+}
+
+void GetLastErrorEx(const wchar_t *f, ...)
+{
+	LPVOID lpMsgBuf;
+	DWORD dw = GetLastError();
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER|FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		dw,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPWSTR)&lpMsgBuf,
+		0,
+		NULL);
+
+	const int len = 0x2000;
+	wchar_t buf[len];
+	va_list l;
+	va_start(l, f);
+	_vsnwprintf(buf, len, f, l);
+	va_end(l);
+
+	writeDbg(L"%s%s", lpMsgBuf, buf);
 }
 
 // Set a call back with the handle after init to set the path.
