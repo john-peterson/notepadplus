@@ -28,6 +28,7 @@
 
 #include "precompiledHeaders.h"
 #include "../Utf8.h"
+using namespace std;
 
 WcharMbcsConvertor * WcharMbcsConvertor::_pSelf = new WcharMbcsConvertor;
 
@@ -42,6 +43,16 @@ void printStr(const TCHAR *str2print)
 {
 	::MessageBox(NULL, str2print, TEXT(""), MB_OK);
 };
+
+wstring format(const wchar_t* f, ...) {
+	const int len = 0x2000;
+	wchar_t buf[len];
+	va_list l;
+	va_start(l, f);
+	_vsnwprintf(buf, len, f, l);
+	va_end(l);
+	return wstring(buf);
+}
 
 void writeDbg(const wchar_t *f, ...)
 {
